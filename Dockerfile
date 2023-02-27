@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   llvm \
   mold
 
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --profile minimal --default-toolchain stable
 
 ENV PATH="/root/.cargo/bin:${PATH}"
 
