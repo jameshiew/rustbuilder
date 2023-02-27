@@ -17,9 +17,9 @@ docker push $IMAGE-arm64
 
 docker build \
     --build-arg RUST_TOOLCHAIN=$RUST_TOOLCHAIN \
-    --platform linux/arm64 \
-    -t $IMAGE-arm64 .
-docker push $IMAGE-arm64
+    --platform linux/amd64 \
+    -t $IMAGE-amd64 .
+docker push $IMAGE-amd64
 
 docker manifest create $IMAGE \
     --amend $IMAGE-arm64 \
