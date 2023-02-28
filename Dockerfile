@@ -17,9 +17,12 @@ RUN curl https://sh.rustup.rs -sSf | sh -s -- -y --profile minimal --default-too
 
 ENV PATH="${CARGO_HOME}/bin:${PATH}"
 
+# more Docker friendly to use CLI git to fetch Cargo crates - see <https://github.com/rust-lang/cargo/issues/10583>
+ENV CARGO_NET_GIT_FETCH_WITH_CLI=true
+RUN cargo search
+
 WORKDIR /build
 
 COPY config.toml ${CARGO_HOME}/config.toml
 
-RUN cargo search
 RUN cargo install --locked cargo-chef@0.1.51
