@@ -8,7 +8,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   llvm \
   mold
 
-
 ENV CARGO_HOME=/usr/local/cargo
 ENV CARGO_TARGET_DIR=/usr/local/build/target
 
