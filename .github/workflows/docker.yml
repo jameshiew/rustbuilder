@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - Dockerfile
+      - config.toml
 
 env:
   IMAGE: jameshiew/rustbuilder:${{ github.sha }}
