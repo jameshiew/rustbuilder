@@ -6,6 +6,8 @@ A base image for building Rust code, that should be less intensive than the defa
 - uses [`mold`](https://github.com/rui314/mold) for linking
 - makes Cargo use native git rather than libgit2, to workaround <https://github.com/rust-lang/cargo/issues/10583>
 
+The build output `target/` directory is `/usr/local/build/target`.
+
 ## Manually pushing to Docker hub
 
 ```shell
