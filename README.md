@@ -5,6 +5,7 @@ A base image for building Rust code, that should be less intensive than the defa
 - based off [Debian Bookworm](https://hub.docker.com/_/debian)
 - uses [`mold`](https://github.com/rui314/mold) for linking
 - makes Cargo use native git rather than libgit2, to workaround <https://github.com/rust-lang/cargo/issues/10583>
+- includes a prebuilt [cargo-chef](https://github.com/LukeMathWalker/cargo-chef) binary for cooking from recipe.json files
 
 The build output `target/` directory is `/usr/local/build/target`.
 
