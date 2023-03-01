@@ -1,6 +1,10 @@
 # rustbuilder
 
-A base image for building Rust code, with a bit extra.
+A base image for building Rust code, that should be less intensive than the default Rust images.
+
+- based off Debian Bookworm
+- uses [`mold`](https://github.com/rui314/mold) for linking
+- makes Cargo use native git rather than libgit2, to workaround <https://github.com/rust-lang/cargo/issues/10583>
 
 ## Manually pushing to Docker hub
 
