@@ -6,9 +6,10 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   clang \
   curl \
   git \
-  libssl-dev \
   libpq-dev \
+  libssl-dev \
   llvm \
+  pkg-config \
   mold
 
 ENV CARGO_TARGET_DIR=/usr/local/build/target
