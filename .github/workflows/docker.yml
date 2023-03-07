@@ -30,6 +30,7 @@ jobs:
     runs-on: ubuntu-22.04
     outputs:
       IMAGE_TAG: ${{ steps.set_outputs.outputs.IMAGE_TAG }}
+      RUST_VERSION: ${{ steps.set_outputs.outputs.RUST_VERSION }}
     steps:
       - if: github.event_name == 'workflow_dispatch'
         name: Set envvars from input
