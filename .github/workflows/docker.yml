@@ -6,6 +6,8 @@ on:
       tag:
         required: true
         description: "Tag for the image"
+  schedule:
+    - cron: 30 12 * * TUE
   push:
     branches:
       - main
@@ -28,6 +30,10 @@ jobs:
         name: Set tag from input
         run: |
           echo "IMAGE_TAG=${{ inputs.tag }}" >> $GITHUB_ENV
+      - if: github.event_name == 'schedule'
+        name: Set tag from date
+        run: |
+          echo "IMAGE_TAG=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
       - name: Forward IMAGE_TAG to later jobs
         id: set_outputs
         run: |
