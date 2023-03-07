@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   clang \
   curl \
   git \
+  libssl-dev \
+  libpq-dev \
   llvm \
   mold
 
