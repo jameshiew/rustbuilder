@@ -47,7 +47,7 @@ jobs:
           echo "RUST_VERSION=${{ env.RUST_VERSION }}" >> $GITHUB_OUTPUT
 
   build:
-    runs-on: ${{ matrix.runs_on }}}
+    runs-on: ${{ matrix.runs_on }}
     needs:
       - override-envvars
     strategy:
