@@ -1,5 +1,5 @@
 ARG RUST_TOOLCHAIN=1.67.1
-FROM rust:${RUST_TOOLCHAIN}-slim-bookworm AS base
+FROM clux/muslrust:${RUST_TOOLCHAIN}-stable AS base
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
   ca-certificates \
