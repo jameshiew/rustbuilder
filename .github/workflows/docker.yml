@@ -6,6 +6,12 @@ on:
       tag:
         required: true
         description: "Tag for the image"
+      rust_version:
+        required: true
+        description: "The Rust version to use"
+        default: "1.67.1"
+  schedule:
+    - cron: 30 12 * * TUE
   push:
     branches:
       - main
@@ -17,42 +23,51 @@ on:
 env:
   IMAGE_NAME: rustbuilder
   IMAGE_TAG: "${{ github.sha }}"
+  RUST_VERSION: "1.67.1"
 
 jobs:
-  set-image-tag:
+  override-envvars:
     runs-on: ubuntu-22.04
     outputs:
       IMAGE_TAG: ${{ steps.set_outputs.outputs.IMAGE_TAG }}
     steps:
       - if: github.event_name == 'workflow_dispatch'
-        name: Set tag from input
+        name: Set envvars from input
         run: |
           echo "IMAGE_TAG=${{ inputs.tag }}" >> $GITHUB_ENV
+          echo "RUST_VERSION=${{ inputs.rust_version }}" >> $GITHUB_ENV
+      - if: github.event_name == 'schedule'
+        name: Set envvars from date
+        run: |
+          echo "IMAGE_TAG=${{ env.IMAGE_TAG }}-$(date +'%Y-%m-%d')" >> $GITHUB_ENV
       - name: Forward IMAGE_TAG to later jobs
         id: set_outputs
         run: |
           echo "IMAGE_TAG=${{ env.IMAGE_TAG }}" >> $GITHUB_OUTPUT
+          echo "RUST_VERSION=${{ env.RUST_VERSION }}" >> $GITHUB_OUTPUT
 
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ${{ matrix.runs_on }}}
     needs:
-      - set-image-tag
+      - override-envvars
     strategy:
       matrix:
-        arch:
-          - amd64
-          - arm64
+        include:
+          - arch: amd64
+            runs_on: ubuntu-22.04
+          - arch: arm64
+            runs_on: buildjet-2vcpu-ubuntu-2204-arm
     steps:
       - run: |
-          echo "IMAGE=${{secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ needs.set-image-tag.outputs.IMAGE_TAG }}" >> $GITHUB_ENV
+          echo "IMAGE=${{secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ needs.override-envvars.outputs.IMAGE_TAG }}" >> $GITHUB_ENV
       - uses: actions/checkout@v3
-      - uses: docker/setup-qemu-action@v2
       - uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - run: |
           docker build \
+            --build-arg RUST_VERSION=${{ needs.override-envvars.outputs.RUST_VERSION }} \
             --platform linux/${{ matrix.arch }} \
             -t $IMAGE-${{ matrix.arch }} \
             .
@@ -61,11 +76,11 @@ jobs:
   push-multiarch-manifest:
     runs-on: ubuntu-22.04
     needs:
-      - set-image-tag
+      - override-envvars
       - build
     steps:
       - run: |
-          echo "IMAGE=${{secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ needs.set-image-tag.outputs.IMAGE_TAG }}" >> $GITHUB_ENV
+          echo "IMAGE=${{secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ needs.override-envvars.outputs.IMAGE_TAG }}" >> $GITHUB_ENV
       - uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
