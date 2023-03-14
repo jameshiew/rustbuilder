@@ -9,7 +9,7 @@ on:
       rust_version:
         required: true
         description: "The Rust version to use"
-        default: "1.67.1"
+        default: "1.68"
   schedule:
     - cron: 30 12 * * TUE
   push:
@@ -23,7 +23,7 @@ on:
 env:
   IMAGE_NAME: rustbuilder
   IMAGE_TAG: "${{ github.sha }}"
-  RUST_VERSION: "1.67.1"
+  RUST_VERSION: "1.68"
 
 jobs:
   override-envvars:
