@@ -17,6 +17,7 @@ ENV CARGO_TARGET_DIR=/usr/local/build/target
 # more Docker friendly to use CLI git to fetch Cargo crates
 # see <https://github.com/rust-lang/cargo/issues/10583>
 ENV CARGO_NET_GIT_FETCH_WITH_CLI=true
+ENV CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
 RUN cargo search
 
 WORKDIR /build
